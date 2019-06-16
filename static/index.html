@@ -1,0 +1,87 @@
+<html>
+<head>
+ <script>
+var webSocket = new WebSocket("ws://localhost:5401/");
+webSocket.onerror = function(event) {
+  console.error("WebSocket error observed:", event);
+};
+
+var stop = new Image();
+stop.src = '/_3p/Stopsign.svg';
+
+var message;
+
+function azAngle(az) {
+ return ((az + 270.0) % 360.0) * Math.PI / 180.0;
+}
+
+function elRadius(el) {
+ return 90.0 - el; // 90 is directly overhead and therefore at the centre
+}
+
+function pointXY(canvas, az, el) {
+ return {
+  'x': ((Math.cos(azAngle(az)) * elRadius(el)) + canvas.width/2),
+  'y': ((Math.sin(azAngle(az)) * elRadius(el)) + canvas.height/2)
+ }
+}
+
+function draw() {
+ var canvas = document.getElementById('scope');
+ var ctx = canvas.getContext('2d');
+ ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+ const stopWidth = 40;
+ ctx.drawImage(
+  stop,
+  canvas.width/2 - stopWidth/2,
+  (message.status.stop == 'north') ? 10 : (canvas.height - stopWidth - 10),
+  stopWidth,
+  stopWidth
+ );
+
+ ctx.strokeStyle = 'gray';
+ ctx.lineWidth = 1;
+ ctx.beginPath();
+ ctx.arc(canvas.width/2,         canvas.height/2,     90, 0, Math.PI * 2);
+ ctx.arc(canvas.width/2,         canvas.height/2,     60, 0, Math.PI * 2);
+ ctx.arc(canvas.width/2,         canvas.height/2,     30, 0, Math.PI * 2);
+ ctx.moveTo(canvas.width/2,      canvas.height/2 - 90);
+ ctx.lineTo(canvas.width/2,      canvas.height/2 + 90);
+ ctx.moveTo(canvas.width/2 - 90, canvas.height/2);
+ ctx.lineTo(canvas.width/2 + 90, canvas.height/2);
+ ctx.stroke();
+
+ ctx.strokeStyle = 'black';
+ ctx.lineWidth = 3;
+ ctx.beginPath();
+ var point = pointXY(canvas, message.status.az, message.status.el);
+ ctx.moveTo(point.x + 10.0, point.y);
+ ctx.arc(point.x, point.y, 10.0, 0.0, Math.PI * 2);
+ ctx.stroke();
+
+ ctx.strokeStyle = 'green';
+ ctx.lineWidth = 3;
+ ctx.beginPath();
+ ctx.moveTo(point.x, point.y);
+ ctx.arc(canvas.width/2, canvas.height/2, elRadius(message.status.el),
+  azAngle(message.status.az), azAngle(message.target.az), message.target.anticlockwise
+ );
+ var targetXY = pointXY(canvas, message.target.az, message.target.el);
+ ctx.lineTo(targetXY.x, targetXY.y);
+ ctx.stroke();
+}
+
+webSocket.onmessage = function(event) {
+ message = JSON.parse(event.data);
+ window.requestAnimationFrame(draw);
+};
+
+ </script>
+ <style type="text/css">
+canvas { border: 1px solid black; }
+ </style>
+</head>
+<body>
+ <canvas id="scope" width="300" height="300"></canvas>
+</body>
