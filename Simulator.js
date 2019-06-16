@@ -91,6 +91,7 @@ wss.on('connection', function connection(ws) {
   clearInterval(interval);
  }
 });
+console.log('WS 4501 SS Running');
 
 // ----- rotctl net protocol -------------------------------------------------
 
@@ -158,3 +159,4 @@ console.log('newAz == ' + newAz + ', newEl == ' + newEl);
   status.active = false;
  });
 }).listen(4533, '127.0.0.1');
+console.log('tcp://4533 Device Simulator Running');
