@@ -1,0 +1,24 @@
+{
+  "name": "ground-simulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Simulator.js",
+  "scripts": {
+    "server": "node Simulator.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolandturner/ground-simulator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rolandturner/ground-simulator/issues"
+  },
+  "homepage": "https://github.com/rolandturner/ground-simulator#readme",
+  "dependencies": {
+    "connect": "^3.7.0",
+    "serve-static": "^1.14.1",
+    "ws": "^7.0.0"
+  }
+}
