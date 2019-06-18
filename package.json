@@ -1,7 +1,7 @@
 {
   "name": "ground-simulator",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Simulated satellite ground station (for workshop use)",
   "main": "Simulator.js",
   "scripts": {
     "server": "node Simulator.js"
@@ -10,8 +10,8 @@
     "type": "git",
     "url": "git+https://github.com/rolandturner/ground-simulator.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Roland Turner",
+  "license": "LGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/rolandturner/ground-simulator/issues"
   },
